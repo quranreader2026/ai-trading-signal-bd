@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <title>AI Trading Signal BD</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#080d18;color:#edf3ff;font-family:Arial,sans-serif}
+    header{padding:18px 5%;display:flex;justify-content:space-between;align-items:center;background:#101a2b;border-bottom:1px solid #26344c;gap:12px}
+    .brand{font-size:19px;font-weight:bold;color:#55d6a5}
+    button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;font-weight:bold}
+    .lang{background:#26344c;color:white}
+    main{max-width:1100px;margin:auto;padding:25px 16px}
+    .hero{padding:28px 20px;border-radius:18px;background:linear-gradient(120deg,#122d3b,#172344);border:1px solid #28465b}
+    h1{font-size:28px;margin:0 0 12px}
+    p{color:#aebbd0;line-height:1.6}
+    .tag{color:#55d6a5;font-weight:bold}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:20px}
+    .card{background:#111c2e;border:1px solid #26344c;padding:19px;border-radius:14px}
+    .card h3{margin-top:0}
+    .status{padding:12px;background:#2b2530;color:#ffd18b;border-radius:9px;margin-top:12px}
+    .nav{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0}
+    .nav button{background:#1c2a40;color:#dce8fa}
+    .nav button.active{background:#1c9b76;color:white}
+    .section{display:none}
+    .section.active{display:block}
+    .muted{color:#9aaac1;font-size:13px}
+    .big{font-size:22px;font-weight:bold;color:#55d6a5}
+    footer{text-align:center;padding:25px;color:#8291a8;font-size:13px}
+    @media(max-width:600px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:23px}
+      header{padding:14px}
+      .brand{font-size:16px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">✦ AI Trading Signal BD</div>
+  <button class="lang" onclick="toggleLang()" id="langBtn">বাংলা</button>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="tag" data-en="SMART MARKET ANALYSIS" data-bn="স্মার্ট মার্কেট বিশ্লেষণ">SMART MARKET ANALYSIS</div>
+    <h1 data-en="Welcome to AI Trading Signal BD" data-bn="AI Trading Signal BD-তে স্বাগতম">Welcome to AI Trading Signal BD</h1>
+    <p data-en="Explore market analysis, signal information and trading education in one place."
+       data-bn="এক জায়গায় মার্কেট বিশ্লেষণ, সিগন্যালের তথ্য এবং ট্রেডিং শিক্ষা দেখুন।">
+       Explore market analysis, signal information and trading education in one place.
+    </p>
+    <div class="status" data-en="⚠ Live market connection is not configured yet. No active signal is available."
+         data-bn="⚠ লাইভ মার্কেট সংযোগ এখনো চালু হয়নি। বর্তমানে কোনো সক্রিয় সিগন্যাল নেই।">
+      ⚠ Live market connection is not configured yet. No active signal is available.
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="active" onclick="showSection('dashboard',this)" data-en="Dashboard" data-bn="ড্যাশবোর্ড">Dashboard</button>
+    <button onclick="showSection('analysis',this)" data-en="AI Analysis" data-bn="AI বিশ্লেষণ">AI Analysis</button>
+    <button onclick="showSection('signals',this)" data-en="Signals" data-bn="সিগন্যাল">Signals</button>
+    <button onclick="showSection('history',this)" data-en="History" data-bn="ইতিহাস">History</button>
+    <button onclick="showSection('risk',this)" data-en="Risk Warning" data-bn="ঝুঁকি সতর্কতা">Risk Warning</button>
+  </div>
+
+  <section id="dashboard" class="section active">
+    <div class="grid">
+      <div class="card">
+        <h3 data-en="Market Status" data-bn="মার্কেটের অবস্থা">Market Status</h3>
+        <div class="big" data-en="Not Connected" data-bn="সংযুক্ত নয়">Not Connected</div>
+        <p data-en="Live data feed is not available." data-bn="লাইভ ডেটা ফিড পাওয়া যাচ্ছে না।">Live data feed is not available.</p>
+      </div>
+      <div class="card">
+        <h3 data-en="Active Signals" data-bn="সক্রিয় সিগন্যাল">Active Signals</h3>
+        <div class="big">0</div>
+        <p data-en="No verified active signals." data-bn="কোনো যাচাইকৃত সক্রিয় সিগন্যাল নেই।">No verified active signals.</p>
+      </div>
+      <div class="card">
+        <h3 data-en="Market Analysis" data-bn="মার্কেট বিশ্লেষণ">Market Analysis</h3>
+        <p data-en="Waiting for a verified market data connection." data-bn="যাচাইকৃত মার্কেট ডেটা সংযোগের অপেক্ষায়।">Waiting for a verified market data connection.</p>
+      </div>
+      <div class="card">
+        <h3 data-en="Signal Accuracy" data-bn="সিগন্যালের সঠিকতার হার">Signal Accuracy</h3>
+        <div class="big">—</div>
+        <p data-en="Accuracy will appear after verified results are available." data-bn="যাচাইকৃত ফলাফল পাওয়া গেলে সঠিকতার হার দেখানো হবে।">Accuracy will appear after verified results are available.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="analysis" class="section">
+    <div class="card">
+      <h2 data-en="AI Market Analysis" data-bn="AI মার্কেট বিশ্লেষণ">AI Market Analysis</h2>
+      <p data-en="The analysis engine is waiting for a live and reliable market data source."
+         data-bn="বিশ্লেষণ ইঞ্জিন একটি লাইভ ও নির্ভরযোগ্য মার্কেট ডেটা সোর্সের অপেক্ষায় আছে।">
+        The analysis engine is waiting for a live and reliable market data source.
+      </p>
+      <div class="status" data-en="Analysis unavailable — no market data connected."
+           data-bn="বিশ্লেষণ পাওয়া যাচ্ছে না — কোনো মার্কেট ডেটা সংযুক্ত নেই।">
+        Analysis unavailable — no market data connected.
+      </div>
+    </div>
+  </section>
+
+  <section id="signals" class="section">
+    <div class="card">
+      <h2 data-en="UP / DOWN Signals" data-bn="UP / DOWN সিগন্যাল">UP / DOWN Signals</h2>
+      <p data-en="No active signal. A signal will only be shown after real data analysis and validation."
+         data-bn="কোনো সক্রিয় সিগন্যাল নেই। প্রকৃত ডেটা বিশ্লেষণ ও যাচাইয়ের পরই সিগন্যাল দেখানো হবে।">
+        No active signal. A signal will only be shown after real data analysis and validation.
+      </p>
+      <div class="status" data-en="Waiting for verified data." data-bn="যাচাইকৃত ডেটার অপেক্ষায়।">Waiting for verified data.</div>
+    </div>
+  </section>
+
+  <section id="history" class="section">
+    <div class="card">
+      <h2 data-en="Signal History" data-bn="সিগন্যালের ইতিহাস">Signal History</h2>
+      <p data-en="No verified signal records yet." data-bn="এখনো কোনো যাচাইকৃত সিগন্যালের রেকর্ড নেই।">No verified signal records yet.</p>
+    </div>
+  </section>
+
+  <section id="risk" class="section">
+    <div class="card">
+      <h2 data-en="Risk Warning" data-bn="ঝুঁকি সতর্কতা">Risk Warning</h2>
+      <p data-en="Trading involves financial risk. Signals are not guaranteed to be correct and you may lose money. Never trade money you cannot afford to lose."
+         data-bn="ট্রেডিংয়ে আর্থিক ঝুঁকি রয়েছে। কোনো সিগন্যাল সঠিক হওয়ার নিশ্চয়তা নেই এবং আপনার অর্থ ক্ষতি হতে পারে। যে টাকা হারানোর সামর্থ্য নেই, তা দিয়ে কখনো ট্রেড করবেন না।">
+        Trading involves financial risk. Signals are not guaranteed to be correct and you may lose money. Never trade money you cannot afford to lose.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 AI Trading Signal BD · <span data-en="For educational and informational purposes." data-bn="শিক্ষামূলক ও তথ্যগত ব্যবহারের জন্য।">For educational and informational purposes.</span></footer>
+
+<script>
+let currentLang = "en";
+
+function toggleLang(){
+  currentLang = currentLang === "en" ? "bn" : "en";
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll("[data-en]").forEach(el=>{
+    el.textContent = el.getAttribute("data-" + currentLang);
+  });
+  document.getElementById("langBtn").textContent =
+    currentLang === "en" ? "বাংলা" : "English";
+}
+
+function showSection(id, button){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  button.classList.add("active");
+}
+</script>
+</body>
+</html>
