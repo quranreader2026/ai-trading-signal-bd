@@ -165,7 +165,7 @@ function showSection(id, button){
 }const SUPABASE_URL = "https://xbftzqmzyzhhponvawhv.supabase.co";
 const SUPABASE_KEY = "sb_publishable_7lFFD3hRLd3lwU49hAebZw_IEkGuVDz";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+sb.auth.getSession().then(function(r){ if(!r.data || !r.data.session){ window.location.href = "login.html"; } });
 function authMessage(en, bn){
   document.getElementById("authMsg").textContent = currentLang === "en" ? en : bn;
 }
