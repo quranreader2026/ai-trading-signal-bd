@@ -162,8 +162,8 @@ function showSection(id, button){
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   button.classList.add("active");
-}const SUPABASE_URL = "sb_publishable_7lFFD3hRLd3lwU49hAebZw_IEkGuVDz";
-const SUPABASE_KEY = "https://xbftzqmzyzhhponvawhv.supabase.co/rest/v1/";
+}const SUPABASE_URL = "https://xbftzqmzyzhhponvawhv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7lFFD3hRLd3lwU49hAebZw_IEkGuVDz";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function authMessage(en, bn){
