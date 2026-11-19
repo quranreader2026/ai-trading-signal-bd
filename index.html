@@ -64,7 +64,17 @@
     <button onclick="showSection('history',this)" data-en="History" data-bn="ইতিহাস">History</button>
     <button onclick="showSection('risk',this)" data-en="Risk Warning" data-bn="ঝুঁকি সতর্কতা">Risk Warning</button>
   </div>
-
+<div class="card" id="authBox" style="margin-bottom:20px">
+  <h3 data-en="Account" data-bn="অ্যাকাউন্ট">Account</h3>
+  <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:11px;margin:6px 0;border-radius:9px;border:1px solid #26344c;background:#0b1424;color:#edf3ff">
+  <input id="authPass" type="password" placeholder="Password" style="width:100%;padding:11px;margin:6px 0;border-radius:9px;border:1px solid #26344c;background:#0b1424;color:#edf3ff">
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:8px">
+    <button onclick="doLogin()" style="background:#1c9b76;color:white" data-en="Login" data-bn="লগইন">Login</button>
+    <button onclick="doRegister()" style="background:#26344c;color:white" data-en="Register" data-bn="রেজিস্ট্রেশন">Register</button>
+    <button onclick="doLogout()" style="background:#26344c;color:white" data-en="Logout" data-bn="লগআউট">Logout</button>
+  </div>
+  <div id="authMsg" class="muted" style="margin-top:10px"></div>
+</div>
   <section id="dashboard" class="section active">
     <div class="grid">
       <div class="card">
@@ -133,7 +143,7 @@
 </main>
 
 <footer>© 2026 AI Trading Signal BD · <span data-en="For educational and informational purposes." data-bn="শিক্ষামূলক ও তথ্যগত ব্যবহারের জন্য।">For educational and informational purposes.</span></footer>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 let currentLang = "en";
 
@@ -152,7 +162,43 @@ function showSection(id, button){
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   button.classList.add("active");
+}const SUPABASE_URL = "https://xbftzqmzyzhhponvawhv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_7lFFD3hRLd3lwU49hAebZw_IEkGuVDz";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function authMessage(en, bn){
+  document.getElementById("authMsg").textContent = currentLang === "en" ? en : bn;
 }
+
+async function doRegister(){
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPass").value;
+  if(!email || password.length < 6){
+    authMessage("Enter email and a password of at least 6 characters.","ইমেইল এবং কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।");
+    return;
+  }
+  const { error } = await sb.auth.signUp({ email, password });
+  if(error){ authMessage(error.message, error.message); return; }
+  authMessage("Registered. Check your email to confirm, then log in.","রেজিস্ট্রেশন হয়েছে। ইমেইল চেক করে কনফার্ম করুন, তারপর লগইন করুন।");
+}
+
+async function doLogin(){
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPass").value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ authMessage(error.message, error.message); return; }
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  authMessage("Logged out.","লগআউট হয়েছে।");
+}
+
+sb.auth.onAuthStateChange((event, session)=>{
+  if(session){
+    authMessage("Logged in: " + session.user.email, "লগইন করা আছে: " + session.user.email);
+  }
+});
 </script>
 </body>
 </html>
