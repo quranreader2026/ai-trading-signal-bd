@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d18">
+<title>Login - AI Trading Signal BD</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#edf3ff;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}
+.box{width:100%;max-width:420px;background:#111c2e;border:1px solid #26344c;border-radius:16px;padding:24px}
+h1{font-size:22px;margin:0 0 6px}
+p{color:#9aaac1;font-size:14px;margin:0 0 16px}
+input{width:100%;padding:12px;margin-bottom:10px;border-radius:9px;border:1px solid #26344c;background:#0b1424;color:#edf3ff;font-size:16px}
+.row{display:flex;gap:9px}
+button{cursor:pointer;border:0;border-radius:9px;padding:12px 16px;font-weight:bold;color:white;font-size:15px;flex:1}
+.login{background:#1c9b76}
+.reg{background:#26344c}
+#msg{margin-top:12px;color:#ffd18b;font-size:14px;min-height:20px}
+.lang{background:#26344c;margin-top:14px;width:100%}
+</style>
+</head>
+<body>
+<div class="box">
+<h1 id="t">AI Trading Signal BD</h1>
+<p id="s">Login or create an account to continue.</p>
+<input id="em" type="email" placeholder="Email">
+<input id="pw" type="password" placeholder="Password (min 6)">
+<div class="row">
+<button class="login" id="bl" onclick="doLogin()">Login</button>
+<button class="reg" id="br" onclick="doRegister()">Register</button>
+</div>
+<div id="msg"></div>
+<button class="lang" id="lb" onclick="toggleLang()">বাংলা</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL="https://xbftzqmzyzhhponvawhv.supabase.co";
+var SUPABASE_KEY="sb_publishable_7lFFD3hRLd3lwU49hAebZw_IEkGuVDz";
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var lang="en";
+try{lang=localStorage.getItem("lang")||((navigator.language||"").indexOf("bn")===0?"bn":"en");}catch(e){}
+var T={
+en:{t:"AI Trading Signal BD",s:"Login or create an account to continue.",bl:"Login",br:"Register",lb:"বাংলা",em:"Email",pw:"Password (min 6)"},
+bn:{t:"AI Trading Signal BD",s:"চালিয়ে যেতে লগইন করুন বা অ্যাকাউন্ট খুলুন।",bl:"লগইন",br:"রেজিস্টার",lb:"English",em:"ইমেইল",pw:"পাসওয়ার্ড (কমপক্ষে ৬)"}
+};
+function apply(){
+var x=T[lang];
+document.getElementById("t").textContent=x.t;
+document.getElementById("s").textContent=x.s;
+document.getElementById("bl").textContent=x.bl;
+document.getElementById("br").textContent=x.br;
+document.getElementById("lb").textContent=x.lb;
+document.getElementById("em").placeholder=x.em;
+document.getElementById("pw").placeholder=x.pw;
+}
+function toggleLang(){
+lang=(lang==="en")?"bn":"en";
+try{localStorage.setItem("lang",lang);}catch(e){}
+apply();
+}
+function say(en,bn){
+document.getElementById("msg").textContent=(lang==="bn")?bn:en;
+}
+async function doLogin(){
+var e=document.getElementById("em").value.trim();
+var p=document.getElementById("pw").value;
+if(!e||!p){say("Enter email and password.","ইমেইল ও পাসওয়ার্ড লিখুন।");return;}
+say("Please wait...","অপেক্ষা করুন...");
+var r=await sb.auth.signInWithPassword({email:e,password:p});
+if(r.error){
+if(r.error.message.indexOf("Invalid login")>-1){say("Wrong email or password.","ইমেইল বা পাসওয়ার্ড ভুল।");}
+else{say(r.error.message,r.error.message);}
+return;
+}
+window.location.href="index.html";
+}
+async function doRegister(){
+var e=document.getElementById("em").value.trim();
+var p=document.getElementById("pw").value;
+if(!e||!p){say("Enter email and password.","ইমেইল ও পাসওয়ার্ড লিখুন।");return;}
+if(p.length<6){say("Password must be at least 6 characters.","পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");return;}
+say("Please wait...","অপেক্ষা করুন...");
+var r=await sb.auth.signUp({email:e,password:p});
+if(r.error){say(r.error.message,r.error.message);return;}
+if(r.data&&r.data.session){window.location.href="index.html";}
+else{say("Account created. Please login.","অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।");}
+}
+sb.auth.getSession().then(function(r){
+if(r.data&&r.data.session){window.location.href="index.html";}
+});
+apply();
+</script>
+</body>
+</html>
