@@ -63,6 +63,7 @@
     <button onclick="showSection('signals',this)" data-en="Signals" data-bn="সিগন্যাল">Signals</button>
     <button onclick="showSection('history',this)" data-en="History" data-bn="ইতিহাস">History</button>
     <button onclick="showSection('risk',this)" data-en="Risk Warning" data-bn="ঝুঁকি সতর্কতা">Risk Warning</button>
+    <button id="adminBtn" style="display:none" onclick="showSection('admin',this)" data-en="Admin" data-bn="অ্যাডমিন">Admin</button>
   </div><div class="card" id="settingsBox" style="margin-bottom:20px"><h3>⚙️ Settings</h3><div id="authMsg" class="muted"></div><div id="userRole" class="muted" style="margin-top:8px"></div><button onclick="doLogout()" style="background:#26344c;color:white;margin-top:10px">Logout</button></div>
   <section id="dashboard" class="section active">
     <div class="grid">
@@ -129,6 +130,12 @@
       </p>
     </div>
   </section>
+  <section id="admin" class="section">
+    <div class="card">
+      <h2>Admin Panel</h2>
+      <p>Admin tools will appear here.</p>
+    </div>
+  </section>
 </main>
 
 <footer>© 2026 AI Trading Signal BD · <span data-en="For educational and informational purposes." data-bn="শিক্ষামূলক ও তথ্যগত ব্যবহারের জন্য।">For educational and informational purposes.</span></footer>
@@ -188,7 +195,6 @@ sb.auth.onAuthStateChange((event, session)=>{
     authMessage("Logged in: " + session.user.email, "লগইন করা আছে: " + session.user.email);
   }
 });
-  async function loadRole(){ try{ const r = await sb.auth.getSession(); if(!r.data || !r.data.session){ return; } const q = await sb.from("profiles").select("role,plan").eq("id", r.data.session.user.id).single(); if(q.data){ document.getElementById("userRole").textContent = "Role: " + q.data.role + " | Plan: " + q.data.plan; } }catch(e){} } loadRole();
-</script>
+  async function loadRole(){ try{ const r = await sb.auth.getSession(); if(!r.data || !r.data.session){ return; } const q = await sb.from("profiles").select("role,plan").eq("id", r.data.session.user.id).single(); if(q.data){ document.getElementById("userRole").textContent = "Role: " + q.data.role + " | Plan: " + q.data.plan; if(q.data.role === "admin"){ document.getElementById("adminBtn").style.display = ""; } } }catch(e){} } loadRole();
 </body>
 </html>
