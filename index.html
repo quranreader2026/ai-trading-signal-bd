@@ -196,5 +196,6 @@ sb.auth.onAuthStateChange((event, session)=>{
   }
 });
   async function loadRole(){ try{ const r = await sb.auth.getSession(); if(!r.data || !r.data.session){ return; } const q = await sb.from("profiles").select("role,plan").eq("id", r.data.session.user.id).single(); if(q.data){ document.getElementById("userRole").textContent = "Role: " + q.data.role + " | Plan: " + q.data.plan; if(q.data.role === "admin"){ document.getElementById("adminBtn").style.display = ""; } } }catch(e){} } loadRole();
+</script>
 </body>
 </html>
