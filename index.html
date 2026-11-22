@@ -142,7 +142,8 @@
   <label class="muted"><input id="sigPub" type="checkbox" style="width:auto"> Publish now</label>
   <button onclick="addSignal()" style="background:#1c9b76;color:white">Save signal</button>
   <div id="sigMsg" class="muted"></div>
-</div>
+</div><h3 style="margin-top:20px">Signals list</h3>
+<div id="sigList" class="muted">Loading...</div>
     </div>
   </section>
 </main>
@@ -224,6 +225,37 @@ async function addSignal(){
   document.getElementById("sigPair").value = "";
   document.getElementById("sigNote").value = "";
 }
-  </script>
+ async function loadSignals(){
+  const box = document.getElementById("sigList");
+  if(!box){ return; }
+  const r = await sb.from("signals").select("*").order("created_at", { ascending: false });
+  if(r.error){ box.textContent = "Error: " + r.error.message; return; }
+  if(!r.data.length){ box.textContent = "No signals yet."; return; }
+  box.innerHTML = "";
+  r.data.forEach(function(s){
+    const d = document.createElement("div");
+    d.style.cssText = "border:1px solid #26344c;border-radius:9px;padding:10px;margin-top:8px";
+    const t = new Date(s.entry_time).toLocaleString();
+    d.innerHTML = "<b>" + s.pair + "</b> " + s.direction + " | " + s.result + " | " + (s.is_published ? "Published" : "Draft") + "<div class='muted'>" + t + (s.note ? " | " + s.note : "") + "</div>";
+    const mk = function(label, fn){ const b = document.createElement("button"); b.textContent = label; b.style.cssText = "background:#26344c;color:white;margin:6px 6px 0 0;padding:6px 10px"; b.onclick = fn; d.appendChild(b); };
+    mk(s.is_published ? "Unpublish" : "Publish", function(){ updSignal(s.id, { is_published: !s.is_published }); });
+    mk("Win", function(){ updSignal(s.id, { result: "win" }); });
+    mk("Loss", function(){ updSignal(s.id, { result: "loss" }); });
+    mk("Delete", function(){ if(confirm("Delete this signal?")){ delSignal(s.id); } });
+    box.appendChild(d);
+  });
+}
+async function updSignal(id, vals){
+  const r = await sb.from("signals").update(vals).eq("id", id);
+  if(r.error){ alert("Error: " + r.error.message); }
+  loadSignals();
+}
+async function delSignal(id){
+  const r = await sb.from("signals").delete().eq("id", id);
+  if(r.error){ alert("Error: " + r.error.message); }
+  loadSignals();
+}
+setTimeout(loadSignals, 1500); 
+</script>
 </body>
 </html>
