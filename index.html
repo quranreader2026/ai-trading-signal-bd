@@ -133,7 +133,16 @@
   <section id="admin" class="section">
     <div class="card">
       <h2>Admin Panel</h2>
-      <p>Admin tools will appear here.</p>
+      <style>#sigForm input,#sigForm select{padding:10px;border-radius:9px;border:1px solid #26344c;background:#0b1424;color:#edf3ff;width:100%}</style>
+<div id="sigForm" style="display:grid;gap:10px;margin-top:10px">
+  <input id="sigPair" placeholder="Pair (e.g. EUR/USD)">
+  <select id="sigDir"><option>UP</option><option>DOWN</option><option>WAIT</option></select>
+  <div style="display:flex;gap:8px"><input id="sigTime" type="datetime-local"><button onclick="setNow()" style="background:#26344c;color:white">Now</button></div>
+  <input id="sigNote" placeholder="Note (optional)">
+  <label class="muted"><input id="sigPub" type="checkbox" style="width:auto"> Publish now</label>
+  <button onclick="addSignal()" style="background:#1c9b76;color:white">Save signal</button>
+  <div id="sigMsg" class="muted"></div>
+</div>
     </div>
   </section>
 </main>
@@ -197,5 +206,24 @@ sb.auth.onAuthStateChange((event, session)=>{
 });
   async function loadRole(){ try{ const r = await sb.auth.getSession(); if(!r.data || !r.data.session){ return; } const q = await sb.from("profiles").select("role,plan").eq("id", r.data.session.user.id).single(); if(q.data){ document.getElementById("userRole").textContent = "Role: " + q.data.role + " | Plan: " + q.data.plan; if(q.data.role === "admin"){ document.getElementById("adminBtn").style.display = ""; } } }catch(e){} } loadRole();
 </script>
+  <script>
+function setNow(){
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  document.getElementById("sigTime").value = d.toISOString().slice(0,16);
+}
+async function addSignal(){
+  const msg = document.getElementById("sigMsg");
+  const pair = document.getElementById("sigPair").value.trim();
+  const t = document.getElementById("sigTime").value;
+  if(!pair || !t){ msg.textContent = "Enter pair and entry time."; return; }
+  const row = { pair: pair, direction: document.getElementById("sigDir").value, entry_time: new Date(t).toISOString(), note: document.getElementById("sigNote").value.trim(), is_published: document.getElementById("sigPub").checked, result: "pending" };
+  const r = await sb.from("signals").insert(row);
+  if(r.error){ msg.textContent = "Error: " + r.error.message; return; }
+  msg.textContent = "Saved.";
+  document.getElementById("sigPair").value = "";
+  document.getElementById("sigNote").value = "";
+}
+  </script>
 </body>
 </html>
