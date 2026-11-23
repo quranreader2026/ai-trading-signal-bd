@@ -111,6 +111,7 @@
         No active signal. A signal will only be shown after real data analysis and validation.
       </p>
       <div class="status" data-en="Waiting for verified data." data-bn="যাচাইকৃত ডেটার অপেক্ষায়।">Waiting for verified data.</div>
+    <div id="pubSignals"></div>
     </div>
   </section>
 
@@ -118,6 +119,7 @@
     <div class="card">
       <h2 data-en="Signal History" data-bn="সিগন্যালের ইতিহাস">Signal History</h2>
       <p data-en="No verified signal records yet." data-bn="এখনো কোনো যাচাইকৃত সিগন্যালের রেকর্ড নেই।">No verified signal records yet.</p>
+    <div id="histList"></div>
     </div>
   </section>
 
@@ -256,6 +258,32 @@ async function delSignal(id){
   loadSignals();
 }
 setTimeout(loadSignals, 1500); 
-</script>
+async function loadPublic(){
+  const a = document.getElementById("pubSignals");
+  const h = document.getElementById("histList");
+  if(!a || !h){ return; }
+  const r = await sb.from("signals").select("*").eq("is_published", true).order("entry_time", { ascending: false });
+  if(r.error || !r.data){ return; }
+  const row = function(s){
+    const d = document.createElement("div");
+    d.style.cssText = "border:1px solid #26344c;border-radius:9px;padding:10px;margin-top:8px";
+    const b = document.createElement("b");
+    b.textContent = s.pair + " " + s.direction;
+    const m = document.createElement("div");
+    m.className = "muted";
+    m.textContent = new Date(s.entry_time).toLocaleString() + (s.note ? " | " + s.note : "") + (s.result !== "pending" ? " | " + s.result.toUpperCase() : "");
+    d.appendChild(b);
+    d.appendChild(m);
+    return d;
+  };
+  const act = r.data.filter(function(s){ return s.result === "pending"; });
+  const his = r.data.filter(function(s){ return s.result === "win" || s.result === "loss"; });
+  act.forEach(function(s){ a.appendChild(row(s)); });
+  his.forEach(function(s){ h.appendChild(row(s)); });
+  if(act.length){ document.querySelectorAll("#signals .status, #signals p").forEach(function(e){ e.style.display = "none"; }); }
+  if(his.length){ document.querySelectorAll("#history p").forEach(function(e){ e.style.display = "none"; }); }
+}
+setTimeout(loadPublic, 1500);
+ </script>
 </body>
 </html>
